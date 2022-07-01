@@ -21,12 +21,15 @@ const list = new ListTemplate(ul);
 form.addEventListener("submit", (e: Event) => {
   e.preventDefault();
 
+  let values: [string, string, number];
+  values = [toFrom.value, details.value, amount.valueAsNumber];
+
   let doc: HasFormatter;
   if (type.value === "invoice") {
-    doc = new Invoice(toFrom.value, details.value, amount.valueAsNumber);
+    doc = new Invoice(...values);
     console.log(doc);
   } else {
-    doc = new Payment(toFrom.value, details.value, amount.valueAsNumber);
+    doc = new Payment(...values);
     console.log(doc);
   }
 
@@ -60,3 +63,74 @@ let docs: HasFormatter[] = [];
 docs.push(docOne);
 docs.push(docTwo);
 console.log(docs);
+
+// Generics
+
+const addID = <T extends { name: string }>(obj: T) => {
+  let uid = Math.floor(Math.random() * 100);
+  return { ...obj, uid };
+};
+
+let doctOne = addID({ name: "yoshi", age: 40 });
+// let doctTwo = addID("hello");
+
+console.log(doctOne.name);
+// console.log(doctTwo);
+
+// with interfaces
+interface Resourse<T> {
+  uid: number;
+  resourseName: string;
+  data: T;
+}
+
+const doctThree: Resourse<string> = {
+  uid: 9,
+  resourseName: "ddf",
+  data: "dfff",
+};
+const doctFour: Resourse<object> = {
+  uid: 10,
+  resourseName: "sddf",
+  data: { name: "fff", age: 10 },
+};
+const doctFive: Resourse<string[]> = {
+  uid: 9,
+  resourseName: "ddf",
+  data: ["dfff"],
+};
+
+// ENUMS
+enum ResourseType {
+  BOOK,
+  AUTHOR,
+  FILM,
+  DIRECTOR,
+  PERSON,
+}
+interface Resourses<T> {
+  uid: number;
+  resourseName: ResourseType;
+  data: T;
+}
+
+const docsThree: Resourses<string> = {
+  uid: 9,
+  resourseName: ResourseType.BOOK,
+  data: "dfff",
+};
+const docsFour: Resourses<object> = {
+  uid: 10,
+  resourseName: ResourseType.AUTHOR,
+  data: { name: "fff", age: 10 },
+};
+const docsFive: Resourses<string[]> = {
+  uid: 9,
+  resourseName: ResourseType.PERSON,
+  data: ["dfff"],
+};
+
+console.log(docsThree, docsFour, docsFive);
+
+// tuples
+let arr = ["ryu", 3, true];
